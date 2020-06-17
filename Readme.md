@@ -1,4 +1,4 @@
-# Drone Evaluation Service
+# Drone Evaluation Code
 
 The purpose of this code is to evaluate the performance of drones using the
 configuration grammar string defined for the A-Teams program.
@@ -7,11 +7,11 @@ configuration grammar string defined for the A-Teams program.
 
 The tool is currently implemented using the Unity gaming engine. It is based off the assessment that was originally used within the drone design client. It takes in a configuration string and returns  cost, range, and velocity. These performance parameters are evaluated by first constructing the design with components and arrangement specified by the config string. The "virtual" design is then evaluated by "dropping" it in space and starting the motors. It then goes through a "hover" period where it attempts to stabilize back to the original release point. Once the system has achieved stable hover, it tilts forward 16 degrees (though this could easily be changed or made into a dynamic setting) to start forward flight. The simulation then runs until the drone runs out of stored energy. The distance traveled and the final speed are returned. The trajectory of the flight can also be returned if a visual feedback on the flight dynamics is desired.
 
-The tool is intended to be used without the frontend designer tools, where external tools generate vehicle configuration string to be evaluated using this code.  
+The tool is intended to be used without the frontend designer tools, where external tools generate vehicle configuration strings to be evaluated using this code.  
 
 ## Installation Instructions
 
-The evaluation code is implemented in Unity. As a result Unity must be installed on your machine. Our development has been completed in Unity version 2018.04.12f1. Open a new project using this base folder of this project and the scene is located in Assets/Projects/designtool folder as the drone_designer scene.
+This evaluation code is implemented in Unity. As a result Unity must be installed on your machine. Our development has been completed in Unity version 2018.04.12f1. Clone or download this project. Start Unity and open a new project using this base folder, and then open the scene located in Assets/Projects/designtool folder (drone_designer scene).
 
 
 ### Local standalone build
