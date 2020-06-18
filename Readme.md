@@ -15,7 +15,7 @@ This evaluation code is implemented in Unity. As a result Unity must be installe
 
 
 ### Local standalone build
-To make a local build version, change the platform option in Build Settings to match your host platform. For me this is "Windows x86_64". Select an empty build directory and press Build. To execute, using a command prompt, "cd" into the project build directory and enter : your_executable_name -batchmode -nographics -configuration vehicle_grammar_str. This should start the application in the foreground of the terminal shell and not open a graphics window (the windows_build and linux_build folders include an example Unity build with run.bat to start the evaluation). Successful runs should create a new results.txt file, where the vehicle configuration, range (mi), capacity (lb), cost ($), and velocity (mph) are separated using ';'.
+To make a local build version, change the platform option in Build Settings to match your host platform. For me this is "Windows x86_64". Select an empty build directory and press Build. To execute, using a command prompt, "cd" into the project build directory and enter : your_executable_name -batchmode -nographics -configuration vehicle_grammar_str. This should start the application in the foreground of the terminal shell and not open a graphics window (the windows_build and linux_build folders include an example Unity build with run.bat or run.sh to start the evaluation)(you will need to "source run.sh" on linux).  Successful runs should create a new results.txt file, where the vehicle configuration, range (mi), capacity (lb), cost ($), and velocity (mph) are separated using ';'.
 
 ## Citing HyForm™
 If you use HyForm in your own research, please cite it using this paper:
