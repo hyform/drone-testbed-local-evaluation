@@ -269,23 +269,59 @@ namespace DesignerObjects
                 // get the area of the foil
                 float area = obj.GetComponent<MeshRenderer>().bounds.size.x * obj.GetComponent<MeshRenderer>().bounds.size.z;
 
+                RaycastHit hit;
+
                 // check for foils and structures in front
                 Vector3 original_pos = obj.GetComponent<Rigidbody>().transform.position;
                 Vector3 original_scale = obj.GetComponent<Rigidbody>().transform.localScale;
+                // offset to start ray to check for obstructions in front
+                float offsetx = 0.75f * original_scale.z / 2f;
+                float offsety = 0.0f;
+                float offsetz = 0.75f * original_scale.z / 2f;
+                float offsetx1 = 5.0f;
+                float offsetz1 = 5.0f;
+                if (original_pos.x < 0)
+                    offsetx1 = -5.0f;
+                if (original_pos.z < 1000)
+                    offsetz1 = -5.0f;
+                Vector3 pos = new Vector3(original_pos.x + offsetx + offsetx1, original_pos.y + offsety, original_pos.z + offsetz + offsetz1); // offset down a little
                 Vector3 forward_dir = vehicle.mainPrototypeStructure.GetComponent<Rigidbody>().transform.forward;
+                // Debug.DrawRay(pos, 100 * forward_dir, Color.green);
 
-                bool addForce = true;
-                RaycastHit[] hits = Physics.RaycastAll(original_pos, forward_dir, 1000);
-                foreach (RaycastHit hit in hits)
+
+                // check for an obstruction in front
+                bool val = Physics.Raycast(pos, forward_dir, out hit);
+                if (!val)
                 {
-                    string name = hit.rigidbody.gameObject.name;
-                    if (name.StartsWith("foil") || name.StartsWith("structure"))
-                        addForce = false;
+                    // lift proportional to velcity^2 and area
+                    // using Vector3(0f, 1f, 0f) , foil up direction caused instability
+                    // of vehicle in Unity , need to try and update with foil up direction
+                    Vector3 force = new Vector3(0f, 1f, 0f) * dot * 0.0005f * v * v * area;
+                    obj.GetComponent<Rigidbody>().AddRelativeForce(force);
                 }
-                if (addForce)
-                    obj.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0, 1, 0) * dot * 0.0005f * v * v * area);
+                else
+                {
 
-            }
+                    string name = "";
+                    try
+                    {
+                        name = hit.rigidbody.gameObject.name;
+                    }
+                    catch (System.Exception e)
+                    {
+                        // Don't really care if I don't know what I hit - it doesn't matter
+                    }
+
+                    // if a foil or structure, do not apply lift to the back foil
+                    if (!name.StartsWith("foil") && !name.Contains("structure"))
+                    {
+                        // Debug.Log("foil: " + obj + " obstructs with: " + name);
+                        Vector3 force = new Vector3(0f, 1f, 0f) * dot * 0.0005f * v * v * area;
+                        obj.GetComponent<Rigidbody>().AddRelativeForce(force);
+                    }
+
+                }
+            }               
 
             // get total avaialble energy
             float totalEnergy = vehicle.getTotalBatteryEnergy();

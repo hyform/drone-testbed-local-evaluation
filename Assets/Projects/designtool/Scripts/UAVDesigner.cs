@@ -42,7 +42,7 @@ namespace DesignerAssets
         private bool runAsService = false; 
 
         // variables to support analysis
-        public string result;
+        public string result = UAVPhysics.FAILURE;
         public string payload = "2";
         private string oldpayload = "2";
         public float cost = 0;
@@ -122,16 +122,27 @@ namespace DesignerAssets
         public static string NEGATIVEY = "negy";
         public static string AI = "ai";
 
+        public static Boolean returnTrajectory = false;
+
         // Use this for initialization
         void Start()
         {
 
-            Debug.Log("start of UAVDesigner");
+            //Debug.Log("start of UAVDesigner");
 
             string[] args = System.Environment.GetCommandLineArgs();
             for (int i = 0; i < args.Length; i++)
+            {
+                Debug.Log("ARG = " + args[i]);
                 if (args[i] == "-configuration")
+                {
                     defaultConfig = args[i + 1];
+                }
+                else if (args[i] == "-trajectory")
+                {                    
+                    returnTrajectory = true;
+                }
+            }
 
             Application.targetFrameRate = 30;
 
@@ -233,8 +244,8 @@ namespace DesignerAssets
             // GUIAssets.PopupButton.msg = "";
             int capacity = getCapacity(defaultConfig);
 
-            System.IO.File.Delete("results.txt");
-            System.IO.File.WriteAllText("results.txt", defaultConfig + ";" + distance + ";" + capacity + ";" + cost + ";" + velocity);
+            //System.IO.File.Delete("results.txt");
+            //System.IO.File.WriteAllText("results.txt", defaultConfig + ";" + distance + ";" + capacity + ";" + cost + ";" + velocity);
             Application.Quit();
 
         }
@@ -276,7 +287,15 @@ namespace DesignerAssets
             if (physics.analysisEnded)
             {
                 endPrototype(physics.resultMsg, physics.range, physics.velocity, cost);
-                Debug.Log(physics.range + " " + physics.velocity + " " + cost);
+                Debug.Log("RESULTS");
+                Debug.Log(result + " " + physics.range + " " + physics.velocity + " " + cost);
+                if(returnTrajectory)
+                {
+                    foreach (float[] tr in trajectory)
+                    {
+                        Debug.Log(String.Join(" ", tr));
+                    }
+                }
             }
             
 
@@ -651,7 +670,7 @@ namespace DesignerAssets
                         }
 
             // assembly operation failed
-            Debug.Log("Assembly operation failed for " + jointid + " " + type);
+            //Debug.Log("Assembly operation failed for " + jointid + " " + type);
 
         }
 
@@ -901,7 +920,7 @@ namespace DesignerAssets
                     }
                     catch (Exception e)
                     {
-                        Debug.Log(e);
+                        //Debug.Log(e);
                     }
                 }
 
@@ -914,7 +933,7 @@ namespace DesignerAssets
                     }
                     catch (Exception e)
                     {
-                        Debug.Log(e);
+                        //Debug.Log(e);
                     }
                 }
 
@@ -968,7 +987,7 @@ namespace DesignerAssets
                         }
                         else
                         {
-                            Debug.Log("Error in file " + t);
+                            //Debug.Log("Error in file " + t);
                         }
 
                         // check that the new joint index matches the configuration file, 
@@ -1017,7 +1036,7 @@ namespace DesignerAssets
             }
             catch (Exception e)
             {
-                Debug.Log(e);
+                //Debug.Log(e);
             }
 
         }
@@ -1038,7 +1057,7 @@ namespace DesignerAssets
             }
             catch (Exception e)
             {
-                Debug.Log(e);
+                //Debug.Log(e);
                 return -1;
             }
         }
